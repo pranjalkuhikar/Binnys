@@ -101,7 +101,7 @@ const Home = () => {
   };
 
   const defaultHeroImageUrl =
-    "https://via.placeholder.com/1920x1080?text=No+Image";
+    "https://thumbs.dreamstime.com/b/default-image-icon-vector-missing-picture-page-website-design-mobile-app-no-photo-available-236105299.jpg";
 
   if (heroLoading && !searchTerm) {
     return <LoadingSpinner />;
@@ -122,7 +122,7 @@ const Home = () => {
       }}
     >
       {/* Search Bar */}
-      <div className="p-4 flex justify-center absolute px-4 py-10 w-[50em] top-10 left-1/4 z-50">
+      <div className="p-4 flex justify-center absolute px-4 py-10 w-80 md:w-[50em] top-10 left-1/4 z-50">
         <input
           type="text"
           placeholder="Search for movies or TV shows..."
