@@ -24,9 +24,34 @@ export const getMovies = async (req, res) => {
 export const updateMovie = async (req, res) => {
   try {
     const { id } = req.params;
+    const updateFields = {
+      plot: req.body.plot,
+      genres: req.body.genres,
+      runtime: req.body.runtime,
+      rated: req.body.rated,
+      poster: req.body.poster,
+      cast: req.body.cast,
+      num_mflix_comments: req.body.num_mflix_comments,
+      title: req.body.title,
+      fullplot: req.body.fullplot,
+      languages: req.body.languages,
+      released: req.body.released,
+      directors: req.body.directors,
+      writers: req.body.writers,
+      year: req.body.year,
+      type: req.body.type,
+      isFeatured: req.body.isFeatured,
+      imdbRating: req.body.imdbRating,
+      language: req.body.language,
+      officialSite: req.body.officialSite,
+      status: req.body.status,
+      rating: req.body.rating,
+      network: req.body.network,
+    };
+
     const movie = await Movie.findOneAndUpdate(
       { _id: id, adminId: req.user._id },
-      req.body,
+      { $set: updateFields },
       { new: true, runValidators: true }
     );
     if (!movie) {
