@@ -216,7 +216,7 @@ const Home = () => {
                   )}
               </div>
               <p className="text-base md:text-lg lg:text-xl leading-relaxed text-gray-200 mb-8 max-w-2xl line-clamp-3 drop-shadow-lg">
-                {currentHeroMovie.plot}
+                {currentHeroMovie.plot || "No plot description available."}
               </p>
               <div className="flex flex-wrap gap-4">
                 <Link to={`/movies/${currentHeroMovie._id}`}>

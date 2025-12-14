@@ -40,14 +40,14 @@ export const admin = createApi({
         method: "PUT",
         body,
       }),
-      invalidatesTags: (result, error, { id }) => [{ type: "AdminMovie", id }],
+      invalidatesTags: ["AdminMovie"],
     }),
     deleteMovie: builder.mutation({
       query: (id) => ({
         url: `/admin/movies/${id}`,
         method: "DELETE",
       }),
-      invalidatesTags: (result, error, id) => [{ type: "AdminMovie", id }],
+      invalidatesTags: ["AdminMovie"],
     }),
     getMovies: builder.query({
       query: (adminId) =>

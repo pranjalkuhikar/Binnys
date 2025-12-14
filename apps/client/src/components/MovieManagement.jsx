@@ -99,27 +99,66 @@ const MovieManagement = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSuccess("");
+    // Clean up movieData to remove empty strings and null values
     const movieData = {
       ...formData,
-      genres: formData.genres.split(",").map((g) => g.trim()),
-      cast: formData.cast.split(",").map((c) => c.trim()),
-      directors: formData.directors.split(",").map((d) => d.trim()),
-      writers: formData.writers.split(",").map((w) => w.trim()),
-      runtime: parseInt(formData.runtime),
-      year: parseInt(formData.year),
-      imdbRating: parseFloat(formData.imdbRating) || null,
+      genres: formData.genres
+        ? formData.genres
+            .split(",")
+            .map((g) => g.trim())
+            .filter((g) => g)
+        : [],
+      cast: formData.cast
+        ? formData.cast
+            .split(",")
+            .map((c) => c.trim())
+            .filter((c) => c)
+        : [],
+      directors: formData.directors
+        ? formData.directors
+            .split(",")
+            .map((d) => d.trim())
+            .filter((d) => d)
+        : [],
+      writers: formData.writers
+        ? formData.writers
+            .split(",")
+            .map((w) => w.trim())
+            .filter((w) => w)
+        : [],
+      runtime: formData.runtime ? parseInt(formData.runtime) : null,
+      year: formData.year ? parseInt(formData.year) : null,
+      imdbRating: formData.imdbRating ? parseFloat(formData.imdbRating) : null,
     };
 
+    const cleanMovieData = Object.fromEntries(
+      Object.entries(movieData).filter(([, value]) => {
+        if (Array.isArray(value)) return value.length > 0;
+        if (value === null || value === undefined) return false;
+        if (typeof value === "string") return value.trim() !== "";
+        return true;
+      })
+    );
+
     if (editingMovieId) {
-      const update = await updateMovie({
-        id: editingMovieId,
-        ...movieData,
-      }).unwrap();
-      console.log(update);
-      setSuccess("Movie updated successfully!");
+      try {
+        await updateMovie({
+          id: editingMovieId,
+          body: cleanMovieData,
+        }).unwrap();
+        setSuccess("Movie updated successfully!");
+      } catch (error) {
+        console.error("Update failed:", error);
+        setSuccess(`Update failed: ${error.data?.message || error.message}`);
+      }
     } else {
-      await createMovie(movieData).unwrap();
-      setSuccess("Movie added successfully!");
+      try {
+        await createMovie(cleanMovieData).unwrap();
+        setSuccess("Movie added successfully!");
+      } catch (error) {
+        console.error("Create failed:", error);
+        setSuccess(`Create failed: ${error.data?.message || error.message}`);
+      }
     }
     setFormData({
       title: "",
