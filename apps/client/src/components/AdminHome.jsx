@@ -1,31 +1,12 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useGetMoviesQuery, useDeleteMovieMutation } from "../services/admin";
 
 const AdminHome = () => {
   const navigate = useNavigate();
-  const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    const fetchAdminMovies = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:3000/api/admin/movies",
-          {
-            withCredentials: true,
-          }
-        );
-        setMovies(response.data);
-        setLoading(false);
-      } catch (err) {
-        setError(err.response?.data?.message || "Failed to fetch your movies");
-        setLoading(false);
-      }
-    };
-    fetchAdminMovies();
-  }, []);
+  const { data: movies = [], isLoading, error } = useGetMoviesQuery();
+  const [deleteMovie] = useDeleteMovieMutation();
+  const [deleteError, setDeleteError] = useState("");
 
   const handleEdit = (movie) => {
     // Navigate to movie management page with movie data to edit
@@ -35,24 +16,15 @@ const AdminHome = () => {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this movie?")) {
       try {
-        await axios.delete(`http://localhost:3000/api/admin/movies/${id}`, {
-          withCredentials: true,
-        });
-        // Refresh the movie list
-        const response = await axios.get(
-          "http://localhost:3000/api/admin/movies",
-          {
-            withCredentials: true,
-          }
-        );
-        setMovies(response.data);
+        await deleteMovie(id).unwrap();
+        setDeleteError("");
       } catch (err) {
-        setError(err.response?.data?.message || "Failed to delete movie");
+        setDeleteError(err.data?.message || "Failed to delete movie");
       }
     }
   };
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
@@ -114,6 +86,12 @@ const AdminHome = () => {
       {error && (
         <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4">
           <p className="text-red-300">{error}</p>
+        </div>
+      )}
+
+      {deleteError && (
+        <div className="bg-red-500/20 border border-red-500/50 rounded-lg p-4">
+          <p className="text-red-300">{deleteError}</p>
         </div>
       )}
 

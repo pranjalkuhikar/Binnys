@@ -74,7 +74,7 @@ const MediaDetail = ({ mediaType }) => {
     >
       {/* Hero Section */}
       <div
-        className="relative h-96 md:h-screen-50 lg:h-screen-75 flex items-end p-8  md:p-16 bg-cover bg-center"
+        className="relative h-[40em] md:h-screen-50 lg:h-screen-75 flex items-end p-8  md:p-16 bg-cover bg-center"
         style={{
           backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.8) 100%), url(${
             media.poster || defaultImageUrl
