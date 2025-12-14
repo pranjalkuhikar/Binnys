@@ -32,6 +32,7 @@ export const admin = createApi({
         method: "POST",
         body,
       }),
+      invalidatesTags: ["AdminMovie"],
     }),
     updateMovie: builder.mutation({
       query: ({ id, body }) => ({
@@ -51,6 +52,7 @@ export const admin = createApi({
     getMovies: builder.query({
       query: (adminId) =>
         adminId ? `/movie?adminId=${adminId}` : "/admin/movies",
+      providesTags: ["AdminMovie"],
     }),
     getMovieById: builder.query({
       query: (id) => `/admin/movies/${id}`,

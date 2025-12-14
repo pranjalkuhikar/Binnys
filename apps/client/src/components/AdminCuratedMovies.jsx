@@ -25,7 +25,7 @@ const AdminCuratedMovies = () => {
   }
 
   return (
-    <div className="min-h-screen text-white pt-10 md:mt-0">
+    <div className="min-h-screen text-white pt-10 md:pt-0">
       <div className="container mx-auto p-4">
         <h1
           className="text-4xl font-bold mb-8 text-center"

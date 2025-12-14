@@ -530,7 +530,7 @@ const MovieManagement = () => {
                   key={movie._id}
                   className="bg-gray-700/50 backdrop-blur-sm rounded-xl border border-gray-600/50 overflow-hidden hover:border-blue-500/50 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10 group"
                 >
-                  <div className="aspect-2/3 relative overflow-hidden">
+                  <div className="h-40 relative overflow-hidden">
                     <img
                       src={
                         movie.poster ||
@@ -556,7 +556,10 @@ const MovieManagement = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex space-x-2">
                         <button
-                          onClick={() => handleEdit(movie)}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            handleEdit(movie);
+                          }}
                           className="bg-blue-500/20 hover:bg-blue-500/40 text-blue-300 font-medium py-2 px-3 rounded-lg text-sm transition-all duration-200 flex items-center space-x-1"
                         >
                           <span>✏️</span>
