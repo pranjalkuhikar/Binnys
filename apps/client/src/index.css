@@ -1,1 +1,41 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    --color-primary-bg: #141414; /* Netflix-like very dark background */
+    --color-secondary-bg: #222222; /* Slightly lighter for cards/sections */
+    --color-primary-text: #ffffff;
+    --color-secondary-text: #a3a3a3; /* Slightly darker gray for secondary text */
+    --color-accent: #e50914; /* Netflix red */
+
+    --font-family-sans:
+      "Helvetica Neue", Helvetica, Arial, sans-serif; /* More Netflix-like font stack */
+
+    --spacing-unit: 0.25rem; /* 4px */
+  }
+
+  body {
+    font-family: var(--font-family-sans);
+    background-color: var(--color-primary-bg);
+    color: var(--color-primary-text);
+    line-height: 1.6;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--color-primary-text);
+  }
+
+  a {
+    color: var(--color-accent);
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+}

@@ -5,6 +5,7 @@ const movieSchema = new mongoose.Schema({
   genres: [String],
   runtime: Number,
   rated: String,
+  poster: String,
   cast: [String],
   num_mflix_comments: Number,
   title: String,
@@ -27,6 +28,21 @@ const movieSchema = new mongoose.Schema({
   },
   countries: [String],
   type: String,
+  isFeatured: {
+    type: Boolean,
+    default: false,
+  },
+  adminId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: true,
+  },
+  imdbRating: Number,
+  language: String,
+  officialSite: String,
+  status: String,
+  rating: String,
+  network: String,
   tomatoes: {
     viewer: {
       rating: Number,

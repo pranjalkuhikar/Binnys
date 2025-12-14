@@ -46,12 +46,4 @@ app.use((err, req, res, next) => {
   }
 });
 
-app.use("/test", async (req, res) => {
-  try {
-    res.status(200).json({ message: "Hello World" });
-  } catch (err) {
-    res.status(500).json({ error: "Something went wrong" });
-  }
-});
-
 export default app;
