@@ -19,7 +19,7 @@ const Header = () => {
       <div className="flex items-center">
         <Link
           to="/"
-          className="text-4xl font-bold"
+          className="text-3xl md:text-4xl font-bold"
           style={{ color: "var(--color-accent)" }}
         >
           BINNYS

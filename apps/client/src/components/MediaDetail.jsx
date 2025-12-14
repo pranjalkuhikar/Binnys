@@ -74,7 +74,7 @@ const MediaDetail = ({ mediaType }) => {
     >
       {/* Hero Section */}
       <div
-        className="relative h-screen-75 md:h-screen-50 lg:h-screen-75 flex items-end p-8 md:p-16 bg-cover bg-center"
+        className="relative h-96 md:h-screen-50 lg:h-screen-75 flex items-end p-8  md:p-16 bg-cover bg-center"
         style={{
           backgroundImage: `linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 60%, rgba(0,0,0,0.8) 100%), url(${
             media.poster || defaultImageUrl
@@ -82,13 +82,13 @@ const MediaDetail = ({ mediaType }) => {
         }}
       >
         <div className="relative z-10 max-w-3xl">
-          <h1 className="text-5xl md:text-6xl font-bold mb-4 text-white">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4 text-white">
             {media.title}
           </h1>
-          <p className="text-xl text-gray-300 mb-4">
+          <p className="text-base md:text-lg text-gray-300 mb-4">
             {media.year} | {media.genres ? media.genres.join(", ") : "N/A"}
           </p>
-          <p className="text-lg leading-relaxed text-gray-200 mb-6 line-clamp-4">
+          <p className="text-base leading-relaxed text-gray-200 mb-6 line-clamp-3 md:line-clamp-4">
             {media.plot}
           </p>
           <div className="flex space-x-4">
@@ -103,7 +103,7 @@ const MediaDetail = ({ mediaType }) => {
       </div>
 
       {/* Additional Details Section */}
-      <div className="container mx-auto p-8 md:p-16 -mt-24 relative z-20">
+      <div className="container mx-auto p-8 md:p-16 pt-8 relative z-20">
         <div className="bg-gray-900 bg-opacity-70 rounded-lg p-8 shadow-lg">
           <h2 className="text-3xl font-bold mb-6 text-white">Details</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-300">
