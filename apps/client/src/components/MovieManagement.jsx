@@ -1,13 +1,29 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
 import { useLocation } from "react-router-dom";
 import LoadingSpinner from "./LoadingSpinner";
 import ErrorMessage from "./ErrorMessage";
+import {
+  useGetMoviesQuery,
+  useCreateMovieMutation,
+  useUpdateMovieMutation,
+  useDeleteMovieMutation,
+} from "../services/admin";
 
 const MovieManagement = () => {
   const location = useLocation();
   const movieToEditRef = useRef(null);
-  const [movies, setMovies] = useState([]);
+  const {
+    data: movies = [],
+    isLoading: fetchLoading,
+    error: fetchError,
+  } = useGetMoviesQuery();
+  const [createMovie, { isLoading: addLoading, error: addError }] =
+    useCreateMovieMutation();
+  const [updateMovie, { isLoading: updateLoading, error: updateError }] =
+    useUpdateMovieMutation();
+  const [deleteMovie, { isLoading: deleteLoading, error: deleteError }] =
+    useDeleteMovieMutation();
+
   const [formData, setFormData] = useState({
     title: "",
     plot: "",
@@ -28,9 +44,10 @@ const MovieManagement = () => {
     network: "",
   });
   const [editingMovieId, setEditingMovieId] = useState(null);
-  const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const [loading, setLoading] = useState(false);
+
+  const loading = fetchLoading || addLoading || updateLoading || deleteLoading;
+  const error = fetchError || addError || updateError || deleteError;
 
   // Handle movie editing from AdminHome
   const initializeEditMovie = (movie) => {
@@ -55,27 +72,6 @@ const MovieManagement = () => {
       network: movie.network || "",
     });
   };
-
-  useEffect(() => {
-    const fetchAdminMovies = async () => {
-      setLoading(true);
-      try {
-        // Fetch only movies created by the admin
-        const response = await axios.get(
-          "http://localhost:3000/api/admin/movies",
-          {
-            withCredentials: true,
-          }
-        );
-        setMovies(response.data);
-      } catch (err) {
-        setError(err.response?.data?.message || "Failed to fetch admin movies");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAdminMovies();
-  }, []);
 
   // Handle movie to edit from AdminHome
   useEffect(() => {
@@ -102,10 +98,7 @@ const MovieManagement = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
     setSuccess("");
-    setLoading(true);
-
     const movieData = {
       ...formData,
       genres: formData.genres.split(",").map((g) => g.trim()),
@@ -117,52 +110,33 @@ const MovieManagement = () => {
       imdbRating: parseFloat(formData.imdbRating) || null,
     };
 
-    try {
-      if (editingMovieId) {
-        await axios.put(
-          `http://localhost:3000/api/admin/movies/${editingMovieId}`,
-          movieData,
-          { withCredentials: true }
-        );
-        setSuccess("Movie updated successfully!");
-      } else {
-        await axios.post("http://localhost:3000/api/admin/movies", movieData, {
-          withCredentials: true,
-        });
-        setSuccess("Movie added successfully!");
-      }
-      setFormData({
-        title: "",
-        plot: "",
-        genres: "",
-        runtime: "",
-        rated: "",
-        cast: "",
-        directors: "",
-        writers: "",
-        year: "",
-        poster: "",
-        isFeatured: false,
-        imdbRating: "",
-        language: "",
-        officialSite: "",
-        status: "",
-        rating: "",
-        network: "",
-      });
-      setEditingMovieId(null);
-      const response = await axios.get(
-        "http://localhost:3000/api/admin/movies",
-        {
-          withCredentials: true,
-        }
-      );
-      setMovies(response.data);
-    } catch (err) {
-      setError(err.response?.data?.message || "Operation failed");
-    } finally {
-      setLoading(false);
+    if (editingMovieId) {
+      await updateMovie({ id: editingMovieId, ...movieData }).unwrap();
+      setSuccess("Movie updated successfully!");
+    } else {
+      await createMovie(movieData).unwrap();
+      setSuccess("Movie added successfully!");
     }
+    setFormData({
+      title: "",
+      plot: "",
+      genres: "",
+      runtime: "",
+      rated: "",
+      cast: "",
+      directors: "",
+      writers: "",
+      year: "",
+      poster: "",
+      isFeatured: false,
+      imdbRating: "",
+      language: "",
+      officialSite: "",
+      status: "",
+      rating: "",
+      network: "",
+    });
+    setEditingMovieId(null);
   };
 
   const handleEdit = (movie) => {
@@ -190,23 +164,11 @@ const MovieManagement = () => {
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this movie?")) {
-      setLoading(true);
       try {
-        await axios.delete(`http://localhost:3000/api/admin/movies/${id}`, {
-          withCredentials: true,
-        });
+        await deleteMovie(id).unwrap();
         setSuccess("Movie deleted successfully!");
-        const response = await axios.get(
-          "http://localhost:3000/api/admin/movies",
-          {
-            withCredentials: true,
-          }
-        );
-        setMovies(response.data);
-      } catch (err) {
-        setError(err.response?.data?.message || "Failed to delete movie");
-      } finally {
-        setLoading(false);
+      } catch {
+        setSuccess("");
       }
     }
   };
@@ -216,7 +178,7 @@ const MovieManagement = () => {
   }
 
   if (error) {
-    return <ErrorMessage message={error} />;
+    return <ErrorMessage message={error.message} />;
   }
 
   return (
