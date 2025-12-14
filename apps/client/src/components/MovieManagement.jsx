@@ -111,7 +111,11 @@ const MovieManagement = () => {
     };
 
     if (editingMovieId) {
-      await updateMovie({ id: editingMovieId, ...movieData }).unwrap();
+      const update = await updateMovie({
+        id: editingMovieId,
+        ...movieData,
+      }).unwrap();
+      console.log(update);
       setSuccess("Movie updated successfully!");
     } else {
       await createMovie(movieData).unwrap();
